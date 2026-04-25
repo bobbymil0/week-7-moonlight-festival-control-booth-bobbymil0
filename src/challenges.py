@@ -1,50 +1,54 @@
-"""
-Week 7: Moonlight Festival Control Booth
-
-Use Python's heapq module to solve priority queue problems.
-"""
-
-from __future__ import annotations
-
 import heapq
 
 
 def order_festival_alerts(alerts: list[tuple[int, str]]) -> list[str]:
-    """
-    Return alert titles in the order they should be handled.
+    heap = []
+    for priority, title in alerts:
+        heapq.heappush(heap, (priority, title))
 
-    Each alert is a tuple:
-        (priority, title)
+    result = []
+    while heap:
+        _, title = heapq.heappop(heap)
+        result.append(title)
 
-    Smaller priority numbers should be handled first.
-    """
-    raise NotImplementedError
+    return result
 
 
 def order_festival_alerts_stable(alerts: list[tuple[int, str]]) -> list[str]:
-    """
-    Return alert titles in the order they should be handled.
+    heap = []
+    for i, (priority, title) in enumerate(alerts):
+        heapq.heappush(heap, (priority, i, title))
 
-    If two alerts have the same priority, keep the original input order.
-    """
-    raise NotImplementedError
+    result = []
+    while heap:
+        _, _, title = heapq.heappop(heap)
+        result.append(title)
+
+    return result
 
 
 def top_k_festival_alerts(alerts: list[tuple[int, str]], k: int) -> list[str]:
-    """
-    Return the titles of the k most urgent alerts.
+    if k <= 0:
+        return []
 
-    If k <= 0, return an empty list.
-    If k is larger than the number of alerts, return as many as possible.
-    """
-    raise NotImplementedError
+    heap = []
+    for i, (priority, title) in enumerate(alerts):
+        heapq.heappush(heap, (priority, i, title))
+
+    result = []
+    for _ in range(min(k, len(heap))):
+        _, _, title = heapq.heappop(heap)
+        result.append(title)
+
+    return result
 
 
 def peek_next_festival_alert(alerts: list[tuple[int, str]]) -> str | None:
-    """
-    Return the title of the next alert to handle without permanently
-    changing the original input.
+    if not alerts:
+        return None
 
-    If alerts is empty, return None.
-    """
-    raise NotImplementedError
+    heap = []
+    for i, (priority, title) in enumerate(alerts):
+        heapq.heappush(heap, (priority, i, title))
+
+    return heap[0][2]
